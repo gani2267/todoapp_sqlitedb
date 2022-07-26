@@ -154,6 +154,40 @@ class _TaskPageState extends State<TaskPage> {
                       ),
                     ),
                   ),
+                  Expanded(
+                    child: FutureBuilder(
+                      initialData: [],
+                      future: _dbHelper.getTodo(_taskId),
+                      builder: (context, snapshot){
+                        return ScrollConfiguration(
+                            behavior: ScrollNoGlowBehavior(),
+                            child: ListView.builder(
+                              itemCount:  snapshot.data.length,
+                              itemBuilder: (context,index){
+                                return GestureDetector(
+                                  onTap: () async {
+
+                                    if(snapshot.data[index].isDone == 0){
+                                      await _dbHelper.updateTodoDone(snapshot.data[index].id, 1);
+                                    } else {
+                                      await _dbHelper.updateTodoDone(snapshot.data[index].id, 0);
+                                    }
+                                    setState(() {
+
+                                    });
+                                  },
+                                  child: TodoWidget(
+                                    text: snapshot.data[index].title,
+                                    isDone: snapshot.data[index].isDone == 0 ? false: true,
+                                  ),
+                                );
+                              },
+                            ));
+                      },
+                    ),
+                  ),
+
+                  // code below has error
                   // Expanded(
                   //   child: FutureBuilder(
                   //     initialData: [],
@@ -181,7 +215,7 @@ class _TaskPageState extends State<TaskPage> {
                   //             },
                   //             child: TodoWidget(
                   //               text: snapshot.data[index].title,
-                  //               isDone: snapshot.data[index].isDone == 0 ? false: true,
+                  //    isDone: snapshot.data[index].isDone == 0 ? false: true,
                   //             ),
                   //           );
                   //         },
